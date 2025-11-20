@@ -4,6 +4,11 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+/* En Tailwind v4 los background-image se definen como tokens: 
+   --background-image-NOMBRE. Esto genera automáticamente la utilidad bg-NOMBRE.
+   Por eso bg-hero funciona solo si definimos --background-image-hero aquí. */
+--background-image-hero: url('/images/hero-background.png');
+
   --color-blue-1: #0E78F9;
   --color-dark-1: #1C1F2E;
   --color-dark-2: #161925;
@@ -138,3 +143,4 @@
 .cl-providerIcon__github {
   filter: invert(1);
 }
+
