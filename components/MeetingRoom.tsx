@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/static-components */
 import { cn } from '@/lib/utils'
-import {CallControls, CallParticipantsList, PaginatedGridLayout, SpeakerLayout} from '@stream-io/video-react-sdk'
+import { CallControls, CallParticipantsList, PaginatedGridLayout, SpeakerLayout } from '@stream-io/video-react-sdk'
 import React, { useState } from 'react'
-import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { LayoutList, Users } from 'lucide-react'
-import { useRouter } from "next/navigation" 
+import { useRouter } from "next/navigation"
 
 type CallLayoutType = 'grid' | 'speaker-left' | 'speaker-right'
 
 const MeetingRoom = () => {
   const [layout, setLayout] = useState<CallLayoutType>('speaker-left')
   const [showParticipats, setShowParticipants] = useState(false)
-    const router = useRouter() // 🔥 Usado para redirección al home
+  const router = useRouter() // 🔥 Usado para redirección al home
 
   const CallLayout = () => {
     switch (layout) {
@@ -54,7 +54,7 @@ const MeetingRoom = () => {
       <div className="fixed bottom-4 left-0 right-0 flex w-full items-center justify-center px-2">
         <div
           className="flex items-center gap-4 px-4 bg-gray-900/70 backdrop-blur-xl border border-gray-700 shadow-lg  rounded-full transition-all max-w-full sm:gap-4 sm:px-6 sm:py-0.5">
-          <CallControls  onLeave={() => router.push("/")}  />
+          <CallControls onLeave={() => router.push("/")} />
 
           {/* LAYOUT BUTTON */}
           <DropdownMenu>
