@@ -7,7 +7,7 @@ import { useUser } from '@clerk/nextjs'
 import { Call, useStreamVideoClient } from '@stream-io/video-react-sdk'
 import { toast } from "sonner"
 import { Textarea } from './ui/textarea'
-
+import ReactDatePicker from 'react-datepicker'
 
 const MettingTypeList = () => {
 
@@ -15,14 +15,13 @@ const MettingTypeList = () => {
   const [meetingState, setMeetingState] = useState<'isSchundleMeeting' | 'isJoiningMeeting' | 'isInstantMeeting' | undefined>();
   const { user } = useUser();
   const client = useStreamVideoClient();
+  const [callDetails, setCallDetails] = useState<Call>()
 
   const [values, setValues] = useState({
     dateTime: new Date(),
     description: '',
     link: ''
   })
-
-  const [callDetails, setCallDetails] = useState<Call>()
 
   const createMeeting = async () => {
     if (!client || !user) return;
@@ -31,10 +30,7 @@ const MettingTypeList = () => {
       if (!values.dateTime) {
         toast("Seleccione la fecha")
         return
-
       }
-
-
 
       const id = crypto.randomUUID();
       const call = client.call('default', id);
@@ -63,9 +59,10 @@ const MettingTypeList = () => {
     } catch (error) {
       console.log(error);
       toast("Error al crear la reunion.")
-
     }
   }
+
+  const meetingLink = `${process.env.NEXT_PIBLIC_BASE_URL}/meeting/${callDetails?.id}`
 
   return (
     <section className='grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4'>
@@ -107,10 +104,31 @@ const MettingTypeList = () => {
           buttonText='Crear reunión'
         >
           <div className='flex flex-col gap-2.5'>
-<label className='text-base text-normal leading-[22px] text-sky-50'>Añade un descripcion</label>
-<Textarea/>
+            <label className='text-base text-normal leading-[22px] text-sky-50'>
+              Añade un descripcion
+            </label>
+            <Textarea className='bg-gray-700 focus-visible:ring-0'
+              onChange={(e) => {
+                setValues({ ...values, description: e.target.value })
+              }}
+            />
           </div>
-          </MeetingModal>
+          <div className='flex w-full flex-col gap-2.5'>
+            <label className='text-base text-normal leading-[22px] text-sky-50'>
+              Seleccione fecha y hora
+            </label>
+            <ReactDatePicker
+              selected={values.dateTime}
+              onChange={(date) => setValues({ ...values, dateTime: date! })}
+              showTimeSelect
+              timeFormat='HH:mm'
+              timeIntervals={15}
+              timeCaption='time'
+              dateFormat='MMMM d, yyyy h:mm aa'
+              className='w-full rounded bg-gray-700 p-2 focus:outline-none'
+            />
+          </div>
+        </MeetingModal>
       ) : (
         <MeetingModal
           isOpen={meetingState === 'isSchundleMeeting'}
@@ -118,10 +136,10 @@ const MettingTypeList = () => {
           title='Reunion Creada'
           className='text-center'
           handleClick={() => {
-            //navigator.clipboard.writeText(meetingLiink)
-            //toast({title: 'Link Copiado'})
+            navigator.clipboard.writeText(meetingLink)
+            toast("Link Copiado")
           }}
-          image='/icons/cheked.svg'
+          image='/icons/checked.svg'
           buttonIcon='/icons/copy.svg'
           buttonText='Enlace de la Reunion'
         />
